@@ -14,29 +14,31 @@
         body { font-family: sans-serif; background-color: var(--fondo); margin: 0; padding: 10px; color: white; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
         
-        /* Header con botón de salir */
+        /* Header ajustado para albergar el botón de salir */
         header { 
             text-align: center; 
             padding: 15px 0; 
             border-bottom: 2px solid var(--vino); 
             margin-bottom: 10px; 
-            position: relative; /* Para posicionar el botón de salir */
+            position: relative; /* Necesario para posicionar el botón X */
         }
+
         .btn-salir {
             position: absolute;
             right: 0;
-            top: 5px;
+            top: 10px;
             background: #444;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .titulo-principal { font-size: 1.4rem; font-weight: bold; color: var(--oro); margin: 0; text-transform: uppercase; letter-spacing: 1px; padding-right: 60px; }
+        .titulo-principal { font-size: 1.4rem; font-weight: bold; color: var(--oro); margin: 0; text-transform: uppercase; letter-spacing: 1px; padding-right: 40px; }
         .subtitulo { font-size: 1.1rem; color: #fff; margin-top: 5px; font-weight: bold; }
 
         .bodega-card { background: var(--tarjeta); border-radius: 12px; padding: 15px; border: 1px solid #444; margin-bottom: 5px; }
@@ -62,7 +64,7 @@
 
 <div class="main-container">
     <header>
-        <button class="btn-salir" onclick="salirApp()">X SALIR</button>
+        <button class="btn-salir" onclick="cerrarAplicacion()">X SALIR</button>
         <div class="titulo-principal">BODEGAS FUENTESNUEVAS</div>
         <div class="subtitulo">PARTICIPA en la VOTACIÓN</div>
     </header>
@@ -112,26 +114,22 @@
 </div>
 
 <script>
-    // --- IMPORTANTE: PEGA TU URL DE FIREBASE AQUÍ ---
-    const firebaseConfig = { 
-        databaseURL: "https://console.firebase.google.com/u/0/project/proyec-bodegasfuentesnuevas/database/proyec-bodegasfuentesnuevas-default-rtdb/data/~2F" 
-    };
-    // -----------------------------------------------
-
+    const firebaseConfig = { databaseURL: "https://bodegasfuentesnuevas-default-rtdb.europe-west1.firebasedatabase.app/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     let misVotos = { vale: 0, isa: 0, moran: 0, carreira: 0, alvarez: 0 };
     const MAX_VOTOS_POR_TERMINAL = 5;
 
-    // Función de Salida
-    function salirApp() {
-        if(confirm("¿Quieres salir de la votación?")) {
-            window.location.href = "https://www.google.es"; // Redirige fuera
+    // Función para salir
+    function cerrarAplicacion() {
+        if(confirm("¿Seguro que quieres salir de la votación?")) {
+            // Intentamos cerrar la pestaña, si no, redirigimos a Google
+            window.location.href = "https://www.google.es";
         }
     }
 
-    // Sincronización con la nube
+    // Actualizar datos globales
     db.ref('puntuacion').on('value', (snapshot) => {
         const data = snapshot.val() || {};
         ['vale','isa','moran','carreira','alvarez'].forEach(k => {
@@ -139,7 +137,7 @@
         });
     });
 
-    // Lógica de botones
+    // Selección de botones con lógica exclusiva
     document.querySelectorAll('.btn-v').forEach(boton => {
         boton.addEventListener('click', function() {
             const card = this.closest('.bodega-card');
@@ -184,7 +182,7 @@
     document.getElementById('enviar-btn').addEventListener('click', () => {
         const totalVotadas = Object.values(misVotos).filter(v => v > 0).length;
         if(totalVotadas < 5) {
-            alert("Asigna una puntuación única a cada bodega.");
+            alert("Por favor, asigna una puntuación única a cada bodega antes de enviar.");
             return;
         }
 
@@ -207,3 +205,4 @@
 </script>
 </body>
 </html>
+
