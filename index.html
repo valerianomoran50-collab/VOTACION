@@ -14,45 +14,34 @@
         body { font-family: sans-serif; background-color: var(--fondo); margin: 0; padding: 10px; color: white; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
         
-        header { 
-            text-align: center; 
-            padding: 15px 0; 
-            border-bottom: 2px solid var(--vino); 
-            margin-bottom: 10px; 
-            position: relative;
-        }
-
-        .btn-salir {
-            position: absolute;
-            right: 0;
-            top: 10px;
-            background: #444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--vino); margin-bottom: 10px; position: relative; }
+        .btn-salir { position: absolute; right: 0; top: 10px; background: #444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
 
         .titulo-principal { font-size: 1.4rem; font-weight: bold; color: var(--oro); margin: 0; text-transform: uppercase; letter-spacing: 1px; padding-right: 40px; }
         .subtitulo { font-size: 1.1rem; color: #fff; margin-top: 5px; font-weight: bold; }
 
-        .bodega-card { background: var(--tarjeta); border-radius: 12px; padding: 15px; border: 1px solid #444; margin-bottom: 5px; }
+        .bodega-card { background: var(--tarjeta); border-radius: 12px; padding: 15px; border: 1px solid #444; margin-bottom: 5px; transition: 0.3s; }
         .info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .nombre { font-weight: bold; font-size: 1.1rem; color: #fff; }
         .total-nube { font-size: 0.85rem; color: #4caf50; font-weight: bold; }
 
         .voto-selector { display: flex; justify-content: space-between; gap: 6px; }
         .btn-v { flex: 1; aspect-ratio: 1 / 1; border: 1px solid #555; background: #3d3d3d; color: white; border-radius: 8px; font-weight: bold; font-size: 1.2rem; transition: 0.2s; }
-        
         .btn-v.selected { background-color: var(--vino); border-color: #ff3366; box-shadow: 0 0 10px rgba(255, 51, 102, 0.3); }
         .btn-v.disabled-point { opacity: 0.15; transform: scale(0.85); pointer-events: none; }
 
         .btn-enviar { width: 100%; padding: 20px; background-color: var(--verde); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; margin: 20px 0; cursor: pointer; text-transform: uppercase; }
         .btn-enviar:disabled { background-color: #444; color: #888; }
         
+        /* MODAL PERSONALIZADO */
+        #modal-confirm { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--tarjeta); border: 2px solid var(--oro); border-radius: 15px; padding: 25px; width: 100%; max-width: 400px; text-align: center; }
+        .modal-titulo { color: var(--oro); font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; }
+        .modal-botones { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .btn-si { background: var(--verde); color: white; }
+        .btn-no { background: #666; color: white; }
+
         .admin-section { margin-top: 20px; text-align: center; }
         #admin-panel { display: none; background: #333; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #555; }
         input[type="password"] { background: #1a1a1a; border: 1px solid #555; color: white; padding: 10px; border-radius: 5px; width: 100%; margin-bottom: 10px; text-align: center; }
@@ -70,36 +59,44 @@
     <div id="app-voto">
         <div class="bodega-card" data-id="vale">
             <div class="info"><span class="nombre">1. VALE</span><span class="total-nube">Global: <span id="t-vale">0</span></span></div>
-            <div class="voto-selector">
-                <button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button>
-            </div>
+            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
         </div>
         <div class="bodega-card" data-id="isa">
             <div class="info"><span class="nombre">2. ISA</span><span class="total-nube">Global: <span id="t-isa">0</span></span></div>
-            <div class="voto-selector">
-                <button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button>
-            </div>
+            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
         </div>
         <div class="bodega-card" data-id="moran">
             <div class="info"><span class="nombre">3. MORÁN</span><span class="total-nube">Global: <span id="t-moran">0</span></span></div>
-            <div class="voto-selector">
-                <button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button>
-            </div>
+            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
         </div>
         <div class="bodega-card" data-id="carreira">
             <div class="info"><span class="nombre">4. CARREIRA</span><span class="total-nube">Global: <span id="t-carreira">0</span></span></div>
-            <div class="voto-selector">
-                <button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button>
-            </div>
+            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
         </div>
         <div class="bodega-card" data-id="alvarez">
             <div class="info"><span class="nombre">5. ÁLVAREZ</span><span class="total-nube">Global: <span id="t-alvarez">0</span></span></div>
-            <div class="voto-selector">
-                <button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button>
-            </div>
+            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
         </div>
 
         <button id="enviar-btn" class="btn-enviar">ENVIAR MI VOTACIÓN</button>
+    </div>
+
+    <div id="modal-confirm">
+        <div class="modal-content" id="modal-box">
+            <div id="modal-confirm-UI">
+                <div class="modal-titulo">VOTACIÓN BODEGAS FUENTESNUEVAS</div>
+                <p>¿Confirmas el envío de tus puntos?</p>
+                <div class="modal-botones">
+                    <button class="btn-modal btn-no" onclick="cerrarModal()">CANCELAR</button>
+                    <button class="btn-modal btn-si" onclick="confirmarYEnviar()">SÍ, ENVIAR</button>
+                </div>
+            </div>
+            <div id="modal-exito-UI" style="display:none;">
+                <div class="modal-titulo" style="color:#4caf50;">✅ ¡VOTO REGISTRADO!</div>
+                <p>Muchas gracias por participar en la votación de Fuentesnuevas.</p>
+                <button class="btn-modal btn-si" style="width:100%; margin-top:15px;" onclick="location.reload()">ACEPTAR</button>
+            </div>
+        </div>
     </div>
 
     <div class="admin-section">
@@ -112,11 +109,7 @@
 </div>
 
 <script>
-    // URL Corregida e insertada
-    const firebaseConfig = { 
-        databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" 
-    };
-
+    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -124,10 +117,11 @@
     const MAX_VOTOS_POR_TERMINAL = 5;
 
     function cerrarAplicacion() {
-        if(confirm("¿Seguro que quieres salir de la votación?")) {
-            window.location.href = "https://www.google.es";
-        }
+        if(confirm("¿Seguro que quieres salir?")) window.location.href = "https://www.google.es";
     }
+
+    function abrirModal() { document.getElementById('modal-confirm').style.display = 'flex'; }
+    function cerrarModal() { document.getElementById('modal-confirm').style.display = 'none'; }
 
     db.ref('puntuacion').on('value', (snapshot) => {
         const data = snapshot.val() || {};
@@ -172,18 +166,29 @@
 
     document.getElementById('enviar-btn').addEventListener('click', () => {
         const totalVotadas = Object.values(misVotos).filter(v => v > 0).length;
-        if(totalVotadas < 5) {
-            alert("Asigna una puntuación única a cada bodega.");
-            return;
-        }
-        if(confirm("¿Confirmas tu voto?")) {
-            for (let id in misVotos) {
-                db.ref('puntuacion/' + id).transaction(c => (c || 0) + misVotos[id]);
-            }
-            localStorage.setItem('v_count_final', parseInt(localStorage.getItem('v_count_final') || "0") + 1);
-            location.reload();
-        }
+        if(totalVotadas < 5) { alert("Asigna una puntuación única a cada bodega."); return; }
+        abrirModal();
     });
+
+    // CORRECCIÓN: Primero guardamos y LUEGO avisamos al usuario
+    async function confirmarYEnviar() {
+        const promesas = [];
+        for (let id in misVotos) {
+            promesas.push(db.ref('puntuacion/' + id).transaction(c => (c || 0) + misVotos[id]));
+        }
+
+        try {
+            await Promise.all(promesas); // Esperamos a que Firebase confirme el guardado
+            localStorage.setItem('v_count_final', parseInt(localStorage.getItem('v_count_final') || "0") + 1);
+            
+            // Cambiamos la interfaz del modal a "ÉXITO"
+            document.getElementById('modal-confirm-UI').style.display = 'none';
+            document.getElementById('modal-exito-UI').style.display = 'block';
+        } catch (e) {
+            alert("Error de conexión. Inténtalo de nuevo.");
+            cerrarModal();
+        }
+    }
 
     function ejecutarReset() {
         if(document.getElementById('pass').value === "55555") {
@@ -195,5 +200,3 @@
 </script>
 </body>
 </html>
-
-
