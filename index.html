@@ -14,13 +14,12 @@
         body { font-family: sans-serif; background-color: var(--fondo); margin: 0; padding: 10px; color: white; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
         
-        /* Header ajustado para albergar el botón de salir */
         header { 
             text-align: center; 
             padding: 15px 0; 
             border-bottom: 2px solid var(--vino); 
             margin-bottom: 10px; 
-            position: relative; /* Necesario para posicionar el botón X */
+            position: relative;
         }
 
         .btn-salir {
@@ -35,7 +34,6 @@
             font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .titulo-principal { font-size: 1.4rem; font-weight: bold; color: var(--oro); margin: 0; text-transform: uppercase; letter-spacing: 1px; padding-right: 40px; }
@@ -52,8 +50,8 @@
         .btn-v.selected { background-color: var(--vino); border-color: #ff3366; box-shadow: 0 0 10px rgba(255, 51, 102, 0.3); }
         .btn-v.disabled-point { opacity: 0.15; transform: scale(0.85); pointer-events: none; }
 
-        .btn-enviar { width: 100%; padding: 20px; background-color: var(--verde); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; margin: 20px 0; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-        .btn-enviar:disabled { background-color: #444; color: #888; box-shadow: none; }
+        .btn-enviar { width: 100%; padding: 20px; background-color: var(--verde); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; margin: 20px 0; cursor: pointer; text-transform: uppercase; }
+        .btn-enviar:disabled { background-color: #444; color: #888; }
         
         .admin-section { margin-top: 20px; text-align: center; }
         #admin-panel { display: none; background: #333; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #555; }
@@ -114,22 +112,23 @@
 </div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://bodegasfuentesnuevas-default-rtdb.europe-west1.firebasedatabase.app/" };
+    // URL Corregida e insertada
+    const firebaseConfig = { 
+        databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" 
+    };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     let misVotos = { vale: 0, isa: 0, moran: 0, carreira: 0, alvarez: 0 };
     const MAX_VOTOS_POR_TERMINAL = 5;
 
-    // Función para salir
     function cerrarAplicacion() {
         if(confirm("¿Seguro que quieres salir de la votación?")) {
-            // Intentamos cerrar la pestaña, si no, redirigimos a Google
             window.location.href = "https://www.google.es";
         }
     }
 
-    // Actualizar datos globales
     db.ref('puntuacion').on('value', (snapshot) => {
         const data = snapshot.val() || {};
         ['vale','isa','moran','carreira','alvarez'].forEach(k => {
@@ -137,18 +136,14 @@
         });
     });
 
-    // Selección de botones con lógica exclusiva
     document.querySelectorAll('.btn-v').forEach(boton => {
         boton.addEventListener('click', function() {
             const card = this.closest('.bodega-card');
             const bId = card.dataset.id;
             const pts = parseInt(this.dataset.p);
-
             misVotos[bId] = pts;
-
             card.querySelectorAll('.btn-v').forEach(b => b.classList.remove('selected'));
             this.classList.add('selected');
-
             actualizarRestricciones();
         });
     });
@@ -158,12 +153,8 @@
             const val = parseInt(btn.dataset.p);
             const cardId = btn.closest('.bodega-card').dataset.id;
             const usadoPorOtro = Object.keys(misVotos).some(k => k !== cardId && misVotos[k] === val);
-            
-            if(usadoPorOtro) {
-                btn.classList.add('disabled-point');
-            } else {
-                btn.classList.remove('disabled-point');
-            }
+            if(usadoPorOtro) btn.classList.add('disabled-point');
+            else btn.classList.remove('disabled-point');
         });
     }
 
@@ -182,10 +173,9 @@
     document.getElementById('enviar-btn').addEventListener('click', () => {
         const totalVotadas = Object.values(misVotos).filter(v => v > 0).length;
         if(totalVotadas < 5) {
-            alert("Por favor, asigna una puntuación única a cada bodega antes de enviar.");
+            alert("Asigna una puntuación única a cada bodega.");
             return;
         }
-
         if(confirm("¿Confirmas tu voto?")) {
             for (let id in misVotos) {
                 db.ref('puntuacion/' + id).transaction(c => (c || 0) + misVotos[id]);
@@ -205,4 +195,5 @@
 </script>
 </body>
 </html>
+
 
