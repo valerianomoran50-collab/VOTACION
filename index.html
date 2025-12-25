@@ -5,198 +5,244 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bodegas Fuentesnuevas</title>
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --vino: #800020; --verde: #2e7d32; --fondo: #1a1a1a; --tarjeta: #2d2d2d; --oro: #ffcc00; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: sans-serif; background-color: var(--fondo); margin: 0; padding: 10px; color: white; display: flex; flex-direction: column; align-items: center; }
-        .main-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
+        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde-ok: #28a745; }
         
-        header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--vino); margin-bottom: 10px; position: relative; }
-        .btn-salir { position: absolute; right: 0; top: 10px; background: #444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-
-        .titulo-principal { font-size: 1.4rem; font-weight: bold; color: var(--oro); margin: 0; text-transform: uppercase; letter-spacing: 1px; padding-right: 40px; }
-        .subtitulo { font-size: 1.1rem; color: #fff; margin-top: 5px; font-weight: bold; }
-
-        .bodega-card { background: var(--tarjeta); border-radius: 12px; padding: 15px; border: 1px solid #444; margin-bottom: 5px; transition: 0.3s; }
-        .info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .nombre { font-weight: bold; font-size: 1.1rem; color: #fff; }
-        .total-nube { font-size: 0.85rem; color: #4caf50; font-weight: bold; }
-
-        .voto-selector { display: flex; justify-content: space-between; gap: 6px; }
-        .btn-v { flex: 1; aspect-ratio: 1 / 1; border: 1px solid #555; background: #3d3d3d; color: white; border-radius: 8px; font-weight: bold; font-size: 1.2rem; transition: 0.2s; }
-        .btn-v.selected { background-color: var(--vino); border-color: #ff3366; box-shadow: 0 0 10px rgba(255, 51, 102, 0.3); }
-        .btn-v.disabled-point { opacity: 0.15; transform: scale(0.85); pointer-events: none; }
-
-        .btn-enviar { width: 100%; padding: 20px; background-color: var(--verde); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; margin: 20px 0; cursor: pointer; text-transform: uppercase; }
-        .btn-enviar:disabled { background-color: #444; color: #888; }
+        body { background-color: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
+        .container { width: 100%; max-width: 400px; margin: auto; }
         
-        /* MODAL PERSONALIZADO */
-        #modal-confirm { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--tarjeta); border: 2px solid var(--oro); border-radius: 15px; padding: 25px; width: 100%; max-width: 400px; text-align: center; }
-        .modal-titulo { color: var(--oro); font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; }
-        .modal-botones { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; }
-        .btn-si { background: var(--verde); color: white; }
-        .btn-no { background: #666; color: white; }
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--oro); font-size: 1.5rem; margin: 0; text-transform: uppercase; }
+        .linea-roja { border-bottom: 3px solid var(--vino); width: 100%; margin: 10px 0; }
 
-        .admin-section { margin-top: 20px; text-align: center; }
-        #admin-panel { display: none; background: #333; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #555; }
-        input[type="password"] { background: #1a1a1a; border: 1px solid #555; color: white; padding: 10px; border-radius: 5px; width: 100%; margin-bottom: 10px; text-align: center; }
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+        
+        /* Cabecera con Nombre y Puntos a la derecha */
+        .header-bodega { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .nombre-bodega { font-weight: 900; font-size: 1.2rem; color: var(--oro); text-transform: uppercase; }
+        .puntos-vivos { 
+            display: none; background: var(--vino); color: white; padding: 3px 12px; 
+            border-radius: 20px; font-size: 0.9rem; font-weight: bold; border: 1px solid var(--oro);
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+        .btn-p { background: var(--tecla); color: #000; border: none; padding: 15px 0; border-radius: 6px; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
+        .btn-p.sel { background: var(--vino); color: white; box-shadow: 0 0 10px var(--oro); transform: scale(1.05); }
+        .btn-p.off { opacity: 0.15; pointer-events: none; }
+
+        #btn-env { 
+            width: 100%; padding: 22px; border-radius: 15px; font-size: 1.5rem; font-weight: 900; 
+            margin: 20px 0; text-transform: uppercase; border: none; cursor: pointer;
+            background-color: var(--verde-ok); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        #btn-env:disabled { background-color: #333 !important; color: #777 !important; cursor: not-allowed; box-shadow: none; }
+        .sub-btn { display: block; font-size: 0.85rem; margin-top: 5px; font-weight: normal; opacity: 0.9; }
+
+        /* ESTILO DEL ACTA */
+        #informe { 
+            display: none; background: #fff; color: #000; padding: 25px; border-radius: 15px; 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 85%; max-width: 350px; z-index: 1000; border: 5px solid #000; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        .header-acta { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+        .ganador-box { background: #fff9c4; border: 3px solid #fbc02d; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .fila-acta { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
+<div class="container">
     <header>
-        <button class="btn-salir" onclick="cerrarAplicacion()">X SALIR</button>
-        <div class="titulo-principal">BODEGAS FUENTESNUEVAS</div>
-        <div class="subtitulo">PARTICIPA en la VOTACIÓN</div>
+        <h1>BODEGAS FUENTESNUEVAS</h1>
+        <div class="linea-roja"></div>
     </header>
 
-    <div id="app-voto">
-        <div class="bodega-card" data-id="vale">
-            <div class="info"><span class="nombre">1. VALE</span><span class="total-nube">Global: <span id="t-vale">0</span></span></div>
-            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
-        </div>
-        <div class="bodega-card" data-id="isa">
-            <div class="info"><span class="nombre">2. ISA</span><span class="total-nube">Global: <span id="t-isa">0</span></span></div>
-            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
-        </div>
-        <div class="bodega-card" data-id="moran">
-            <div class="info"><span class="nombre">3. MORÁN</span><span class="total-nube">Global: <span id="t-moran">0</span></span></div>
-            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
-        </div>
-        <div class="bodega-card" data-id="carreira">
-            <div class="info"><span class="nombre">4. CARREIRA</span><span class="total-nube">Global: <span id="t-carreira">0</span></span></div>
-            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
-        </div>
-        <div class="bodega-card" data-id="alvarez">
-            <div class="info"><span class="nombre">5. ÁLVAREZ</span><span class="total-nube">Global: <span id="t-alvarez">0</span></span></div>
-            <div class="voto-selector"><button class="btn-v" data-p="1">1</button><button class="btn-v" data-p="2">2</button><button class="btn-v" data-p="3">3</button><button class="btn-v" data-p="4">4</button><button class="btn-v" data-p="5">5</button></div>
-        </div>
+    <div id="lista"></div>
+    
+    <button id="btn-env" onclick="procesarEnvio()">
+        <span id="txt-main">ENVIAR MI VOTO</span>
+        <span id="txt-count" class="sub-btn">Cargando...</span>
+    </button>
 
-        <button id="enviar-btn" class="btn-enviar">ENVIAR MI VOTACIÓN</button>
-    </div>
-
-    <div id="modal-confirm">
-        <div class="modal-content" id="modal-box">
-            <div id="modal-confirm-UI">
-                <div class="modal-titulo">VOTACIÓN BODEGAS FUENTESNUEVAS</div>
-                <p>¿Confirmas el envío de tus puntos?</p>
-                <div class="modal-botones">
-                    <button class="btn-modal btn-no" onclick="cerrarModal()">CANCELAR</button>
-                    <button class="btn-modal btn-si" onclick="confirmarYEnviar()">SÍ, ENVIAR</button>
-                </div>
-            </div>
-            <div id="modal-exito-UI" style="display:none;">
-                <div class="modal-titulo" style="color:#4caf50;">✅ ¡VOTO REGISTRADO!</div>
-                <p>Muchas gracias por participar en la votación de Fuentesnuevas.</p>
-                <button class="btn-modal btn-si" style="width:100%; margin-top:15px;" onclick="location.reload()">ACEPTAR</button>
+    <div style="text-align:center; margin-top: 30px;">
+        <button onclick="document.getElementById('pass-box').style.display='block'" style="background:none; border:none; color:#666; font-size:0.8rem; text-decoration: underline; cursor:pointer;">Panel Administración</button>
+        <div id="pass-box" style="display:none; margin-top:15px; background: #1a1a1a; padding: 15px; border-radius: 10px;">
+            <input type="password" id="pw" placeholder="Clave" style="padding:10px; width: 70%; border-radius: 5px; border: none;">
+            <button onclick="accesoAdmin()" style="padding:10px; cursor:pointer;">ENTRAR</button>
+            <div id="adm-opc" style="display:none; margin-top:15px;">
+                <button onclick="mostrarActa()" style="background:var(--verde-ok); color:white; padding:12px; width:100%; margin-bottom:10px; border:none; border-radius:5px; font-weight:bold;">📄 VER ACTA</button>
+                <button onclick="resetGeneral()" style="background:var(--vino); color:white; padding:12px; width:100%; border:none; border-radius:5px; font-weight:bold;">⚠️ RESET TOTAL</button>
             </div>
         </div>
     </div>
 
-    <div class="admin-section">
-        <button onclick="document.getElementById('admin-panel').style.display='block'" style="background:none; border:none; color:#444; font-size:0.7rem;">⚙️</button>
-        <div id="admin-panel">
-            <input type="password" id="pass" placeholder="Clave Reset">
-            <button onclick="ejecutarReset()" style="background:#d32f2f; color:white; border:none; padding:10px; width:100%; border-radius:8px;">RESETEAR TODO</button>
+    <div id="informe">
+        <div class="header-acta">
+            <h2 style="margin:0; font-size: 1.5rem; letter-spacing: 1px;">ACTA VOTACIONES</h2>
+            <div style="margin:5px 0; font-weight: 800; font-size: 1.1rem; color: #333;">BODEGAS FUENTESNUEVAS</div>
+            <div id="fecha-acta" style="font-size: 0.9rem; color: #666; font-style: italic;"></div>
         </div>
+        
+        <div class="ganador-box">
+            <small style="color: var(--vino); font-weight: 900; letter-spacing: 1px;">🏆 BODEGA GANADORA</small>
+            <div id="nom-ganador" style="font-size: 1.8rem; font-weight: 900; margin-top:5px; color: #000;">-</div>
+        </div>
+
+        <div id="detalles-acta"></div>
+        
+        <button onclick="document.getElementById('informe').style.display='none'" style="width:100%; padding:15px; margin-top:20px; background:#000; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">CERRAR ACTA</button>
     </div>
 </div>
 
 <script>
+    // CONFIGURACIÓN FIREBASE
     const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let misVotos = { vale: 0, isa: 0, moran: 0, carreira: 0, alvarez: 0 };
-    const MAX_VOTOS_POR_TERMINAL = 5;
+    const BODEGAS = ["VALE", "ISA", "MORÁN", "CARREIRA", "ÁLVAREZ"];
+    const IDS = ["vale", "isa", "moran", "carreira", "alvarez"];
+    let misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
+    let puntosNube = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
 
-    function cerrarAplicacion() {
-        if(confirm("¿Seguro que quieres salir?")) window.location.href = "https://www.google.es";
-    }
+    function init() {
+        const listaDiv = document.getElementById('lista');
+        listaDiv.innerHTML = IDS.map((id, i) => `
+            <div class="card" id="card-${id}">
+                <div class="header-bodega">
+                    <span class="nombre-bodega">${BODEGAS[i]}</span>
+                    <span class="puntos-vivos" id="pts-${id}">0 Pts</span>
+                </div>
+                <div class="grid">${[0,1,2,3,4,5].map(p => `<button class="btn-p" id="btn-${id}-${p}" onclick="gestionarVoto('${id}',${p})">${p}</button>`).join('')}</div>
+            </div>
+        `).join('');
 
-    function abrirModal() { document.getElementById('modal-confirm').style.display = 'flex'; }
-    function cerrarModal() { document.getElementById('modal-confirm').style.display = 'none'; }
-
-    db.ref('puntuacion').on('value', (snapshot) => {
-        const data = snapshot.val() || {};
-        ['vale','isa','moran','carreira','alvarez'].forEach(k => {
-            if(document.getElementById('t-'+k)) document.getElementById('t-'+k).innerText = data[k] || 0;
-        });
-    });
-
-    document.querySelectorAll('.btn-v').forEach(boton => {
-        boton.addEventListener('click', function() {
-            const card = this.closest('.bodega-card');
-            const bId = card.dataset.id;
-            const pts = parseInt(this.dataset.p);
-            misVotos[bId] = pts;
-            card.querySelectorAll('.btn-v').forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-            actualizarRestricciones();
-        });
-    });
-
-    function actualizarRestricciones() {
-        document.querySelectorAll('.btn-v').forEach(btn => {
-            const val = parseInt(btn.dataset.p);
-            const cardId = btn.closest('.bodega-card').dataset.id;
-            const usadoPorOtro = Object.keys(misVotos).some(k => k !== cardId && misVotos[k] === val);
-            if(usadoPorOtro) btn.classList.add('disabled-point');
-            else btn.classList.remove('disabled-point');
+        // Escucha de datos en tiempo real
+        db.ref().on('value', snap => {
+            const data = snap.val() || {};
+            puntosNube = data.puntuacion || puntosNube;
+            IDS.forEach(id => {
+                const el = document.getElementById(`pts-${id}`);
+                if(el) el.innerText = (puntosNube[id] || 0) + " Pts";
+            });
+            refrescarUI();
         });
     }
 
-    function actualizarBotonEnvio() {
-        let realizados = parseInt(localStorage.getItem('v_count_final') || "0");
-        const btn = document.getElementById('enviar-btn');
-        if (realizados >= MAX_VOTOS_POR_TERMINAL) {
-            btn.disabled = true;
-            btn.innerText = "LÍMITE ALCANZADO (5/5)";
-        } else {
-            btn.innerText = `ENVIAR MI VOTO (${realizados + 1} de 5)`;
-        }
+    function gestionarVoto(id, p) {
+        if(contarHechos() >= 5) return;
+        
+        // Toggle: si pulsa el mismo, se quita
+        if(misVotos[id] === p) misVotos[id] = 0;
+        else misVotos[id] = p;
+
+        actualizarBotones(id);
     }
-    actualizarBotonEnvio();
 
-    document.getElementById('enviar-btn').addEventListener('click', () => {
-        const totalVotadas = Object.values(misVotos).filter(v => v > 0).length;
-        if(totalVotadas < 5) { alert("Asigna una puntuación única a cada bodega."); return; }
-        abrirModal();
-    });
+    function actualizarBotones(idModificado) {
+        // Marcar seleccionados
+        IDS.forEach(id => {
+            document.querySelectorAll(`#card-${id} .btn-p`).forEach(b => b.classList.remove('sel'));
+            if(misVotos[id] > 0) {
+                const btn = document.getElementById(`btn-${id}-${misVotos[id]}`);
+                if(btn) btn.classList.add('sel');
+            }
+        });
 
-    // CORRECCIÓN: Primero guardamos y LUEGO avisamos al usuario
-    async function confirmarYEnviar() {
-        const promesas = [];
-        for (let id in misVotos) {
-            promesas.push(db.ref('puntuacion/' + id).transaction(c => (c || 0) + misVotos[id]));
+        // Desactivar números ya usados
+        document.querySelectorAll('.btn-p').forEach(btn => {
+            const val = parseInt(btn.innerText);
+            if(val === 0) return;
+            const bId = btn.id.split('-')[1];
+            const estaUsado = Object.keys(misVotos).some(k => k !== bId && misVotos[k] === val);
+            btn.classList.toggle('off', estaUsado);
+        });
+    }
+
+    async function procesarEnvio() {
+        let hechos = contarHechos();
+        if(hechos >= 5) return;
+
+        let totalSeleccionado = Object.values(misVotos).reduce((a, b) => a + b, 0);
+        let msg = totalSeleccionado === 0 ? "¿Enviar votación vacía? (Gastará 1 turno)" : "¿Confirmar envío de votos?";
+        
+        if(!confirm(msg)) return;
+
+        let updates = {};
+        for(let id in misVotos) {
+            if(misVotos[id] > 0) {
+                updates[`puntuacion/${id}`] = (puntosNube[id] || 0) + misVotos[id];
+            }
         }
 
         try {
-            await Promise.all(promesas); // Esperamos a que Firebase confirme el guardado
-            localStorage.setItem('v_count_final', parseInt(localStorage.getItem('v_count_final') || "0") + 1);
+            if(Object.keys(updates).length > 0) await db.ref().update(updates);
+            await db.ref('participantes').push(Date.now());
             
-            // Cambiamos la interfaz del modal a "ÉXITO"
-            document.getElementById('modal-confirm-UI').style.display = 'none';
-            document.getElementById('modal-exito-UI').style.display = 'block';
-        } catch (e) {
-            alert("Error de conexión. Inténtalo de nuevo.");
-            cerrarModal();
+            localStorage.setItem('votos_fuentesnuevas_v3', hechos + 1);
+            
+            // Limpiar para el siguiente turno
+            misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
+            document.querySelectorAll('.btn-p').forEach(b => { b.classList.remove('sel'); b.classList.remove('off'); });
+            
+            location.reload();
+        } catch (e) { alert("Error de conexión con la base de datos."); }
+    }
+
+    function contarHechos() {
+        return parseInt(localStorage.getItem('votos_fuentesnuevas_v3') || "0");
+    }
+
+    function refrescarUI() {
+        const n = contarHechos();
+        const btn = document.getElementById('btn-env');
+        if(n >= 5) {
+            btn.disabled = true;
+            document.getElementById('txt-main').innerText = "AVANCE DE LA VOTACIÓN";
+            document.getElementById('txt-count').innerText = "Resultados en vivo activos";
+            document.querySelectorAll('.puntos-vivos').forEach(el => el.style.display = 'block');
+        } else {
+            document.getElementById('txt-count').innerText = `Estás en la votación ${n+1} de 5`;
         }
     }
 
-    function ejecutarReset() {
-        if(document.getElementById('pass').value === "55555") {
-            db.ref('puntuacion').set({ vale:0, isa:0, moran:0, carreira:0, alvarez:0 });
-            localStorage.setItem('v_count_final', "0");
+    function accesoAdmin() {
+        if(document.getElementById('pw').value === '55555') {
+            document.getElementById('adm-opc').style.display = 'block';
+        } else { alert("Clave incorrecta"); }
+    }
+
+    function mostrarActa() {
+        const ahora = new Date();
+        document.getElementById('fecha-acta').innerText = ahora.toLocaleDateString() + " | " + ahora.toLocaleTimeString();
+        
+        let html = ""; let max = -1; let ganador = "---";
+        IDS.forEach((id, i) => {
+            const p = puntosNube[id] || 0;
+            if(p > max) { max = p; ganador = BODEGAS[i]; }
+            else if(p === max && p > 0) { ganador = "EMPATE"; }
+            html += `<div class="fila-acta"><span>${BODEGAS[i]}</span><strong>${p} Pts</strong></div>`;
+        });
+
+        document.getElementById('nom-ganador').innerText = max > 0 ? ganador : "Sin votos";
+        document.getElementById('detalles-acta').innerHTML = html;
+        document.getElementById('informe').style.display = 'block';
+    }
+
+    function resetGeneral() {
+        if(confirm("¿ELIMINAR TODOS LOS VOTOS? Esta acción no se puede deshacer.")) {
+            db.ref().set({ puntuacion: {vale:0, isa:0, moran:0, carreira:0, alvarez:0}, participantes: null });
+            localStorage.clear();
             location.reload();
         }
     }
+
+    // Iniciar aplicación
+    window.onload = init;
 </script>
 </body>
 </html>
+
