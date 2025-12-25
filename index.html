@@ -11,45 +11,44 @@
     <style>
         :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde-ok: #28a745; }
         
-        body { background-color: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
+        body { background-color: var(--fondo); color: white; font-family: sans-serif; margin: 0; padding: 10px; }
         .container { width: 100%; max-width: 400px; margin: auto; }
         
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { color: var(--oro); font-size: 1.5rem; margin: 0; text-transform: uppercase; }
-        .linea-roja { border-bottom: 3px solid var(--vino); width: 100%; margin: 10px 0; }
+        header { text-align: center; margin-bottom: 10px; }
+        h1 { color: var(--oro); font-size: 1.4rem; margin: 0; text-transform: uppercase; }
+        .linea-roja { border-bottom: 3px solid var(--vino); width: 100%; margin-bottom: 15px; }
 
-        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
-        
-        /* Cabecera con Nombre y Puntos a la derecha */
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
         .header-bodega { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .nombre-bodega { font-weight: 900; font-size: 1.2rem; color: var(--oro); text-transform: uppercase; }
+        .nombre-bodega { font-weight: 900; font-size: 1.1rem; color: var(--oro); text-transform: uppercase; }
+        
         .puntos-vivos { 
-            display: none; background: var(--vino); color: white; padding: 3px 12px; 
-            border-radius: 20px; font-size: 0.9rem; font-weight: bold; border: 1px solid var(--oro);
+            display: none; background: var(--vino); color: white; padding: 3px 10px; 
+            border-radius: 15px; font-size: 0.85rem; font-weight: bold; border: 1px solid var(--oro);
         }
 
-        .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
-        .btn-p { background: var(--tecla); color: #000; border: none; padding: 15px 0; border-radius: 6px; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .btn-p.sel { background: var(--vino); color: white; box-shadow: 0 0 10px var(--oro); transform: scale(1.05); }
+        .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+        .btn-p { background: var(--tecla); color: #000; border: none; padding: 15px 0; border-radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .btn-p.sel { background: var(--vino); color: white; box-shadow: 0 0 8px var(--oro); }
         .btn-p.off { opacity: 0.15; pointer-events: none; }
 
         #btn-env { 
-            width: 100%; padding: 22px; border-radius: 15px; font-size: 1.5rem; font-weight: 900; 
-            margin: 20px 0; text-transform: uppercase; border: none; cursor: pointer;
-            background-color: var(--verde-ok); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            width: 100%; padding: 22px; border-radius: 12px; font-size: 1.4rem; font-weight: 900; 
+            margin: 15px 0; text-transform: uppercase; border: none; cursor: pointer;
+            background-color: var(--verde-ok); color: white; 
         }
-        #btn-env:disabled { background-color: #333 !important; color: #777 !important; cursor: not-allowed; box-shadow: none; }
-        .sub-btn { display: block; font-size: 0.85rem; margin-top: 5px; font-weight: normal; opacity: 0.9; }
+        #btn-env:disabled { background-color: #333 !important; color: #777 !important; cursor: not-allowed; }
+        .sub-btn { display: block; font-size: 0.8rem; margin-top: 5px; font-weight: normal; }
 
-        /* ESTILO DEL ACTA */
+        /* ACTA */
         #informe { 
-            display: none; background: #fff; color: #000; padding: 25px; border-radius: 15px; 
+            display: none; background: #fff; color: #000; padding: 20px; border-radius: 12px; 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 85%; max-width: 350px; z-index: 1000; border: 5px solid #000; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            width: 85%; max-width: 350px; z-index: 1000; border: 4px solid #000;
         }
-        .header-acta { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-        .ganador-box { background: #fff9c4; border: 3px solid #fbc02d; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .fila-acta { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; font-size: 1.1rem; }
+        .header-acta { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .ganador-box { background: #fff9c4; border: 2px solid #fbc02d; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
+        .fila-acta { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -62,43 +61,39 @@
 
     <div id="lista"></div>
     
-    <button id="btn-env" onclick="procesarEnvio()">
+    <button id="btn-env" onclick="enviarVoto()">
         <span id="txt-main">ENVIAR MI VOTO</span>
         <span id="txt-count" class="sub-btn">Cargando...</span>
     </button>
 
-    <div style="text-align:center; margin-top: 30px;">
-        <button onclick="document.getElementById('pass-box').style.display='block'" style="background:none; border:none; color:#666; font-size:0.8rem; text-decoration: underline; cursor:pointer;">Panel Administración</button>
-        <div id="pass-box" style="display:none; margin-top:15px; background: #1a1a1a; padding: 15px; border-radius: 10px;">
-            <input type="password" id="pw" placeholder="Clave" style="padding:10px; width: 70%; border-radius: 5px; border: none;">
-            <button onclick="accesoAdmin()" style="padding:10px; cursor:pointer;">ENTRAR</button>
-            <div id="adm-opc" style="display:none; margin-top:15px;">
-                <button onclick="mostrarActa()" style="background:var(--verde-ok); color:white; padding:12px; width:100%; margin-bottom:10px; border:none; border-radius:5px; font-weight:bold;">📄 VER ACTA</button>
-                <button onclick="resetGeneral()" style="background:var(--vino); color:white; padding:12px; width:100%; border:none; border-radius:5px; font-weight:bold;">⚠️ RESET TOTAL</button>
+    <div style="text-align:center; margin-top: 20px;">
+        <button onclick="document.getElementById('pass-box').style.display='block'" style="background:none; border:none; color:#555; font-size:0.7rem; cursor:pointer;">ADMINISTRACIÓN</button>
+        <div id="pass-box" style="display:none; margin-top:10px;">
+            <input type="password" id="pw" placeholder="Clave" style="padding:5px; text-align:center;">
+            <button onclick="loginAdmin()">OK</button>
+            <div id="adm-opc" style="display:none; margin-top:10px;">
+                <button onclick="verActa()" style="background:var(--verde-ok); color:white; padding:10px; width:100%; margin-bottom:5px; border:none;">VER ACTA</button>
+                <button onclick="resetApp()" style="background:var(--vino); color:white; padding:10px; width:100%; border:none;">RESET</button>
             </div>
         </div>
     </div>
 
     <div id="informe">
         <div class="header-acta">
-            <h2 style="margin:0; font-size: 1.5rem; letter-spacing: 1px;">ACTA VOTACIONES</h2>
-            <div style="margin:5px 0; font-weight: 800; font-size: 1.1rem; color: #333;">BODEGAS FUENTESNUEVAS</div>
-            <div id="fecha-acta" style="font-size: 0.9rem; color: #666; font-style: italic;"></div>
+            <h2 style="margin:0; font-size: 1.3rem;">ACTA VOTACIONES</h2>
+            <div style="margin:5px 0; font-weight: bold;">BODEGAS FUENTESNUEVAS</div>
+            <div id="fecha-acta" style="font-size: 0.8rem; color: #555;"></div>
         </div>
-        
         <div class="ganador-box">
-            <small style="color: var(--vino); font-weight: 900; letter-spacing: 1px;">🏆 BODEGA GANADORA</small>
-            <div id="nom-ganador" style="font-size: 1.8rem; font-weight: 900; margin-top:5px; color: #000;">-</div>
+            <small style="color: var(--vino); font-weight: bold;">🏆 BODEGA GANADORA</small>
+            <div id="nom-ganador" style="font-size: 1.5rem; font-weight: 900;">-</div>
         </div>
-
         <div id="detalles-acta"></div>
-        
-        <button onclick="document.getElementById('informe').style.display='none'" style="width:100%; padding:15px; margin-top:20px; background:#000; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">CERRAR ACTA</button>
+        <button onclick="document.getElementById('informe').style.display='none'" style="width:100%; padding:10px; margin-top:15px; background:#000; color:#fff; border:none;">CERRAR</button>
     </div>
 </div>
 
 <script>
-    // CONFIGURACIÓN FIREBASE
     const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -106,7 +101,7 @@
     const BODEGAS = ["VALE", "ISA", "MORÁN", "CARREIRA", "ÁLVAREZ"];
     const IDS = ["vale", "isa", "moran", "carreira", "alvarez"];
     let misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
-    let puntosNube = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
+    let puntosGlobales = {};
 
     function init() {
         const listaDiv = document.getElementById('lista');
@@ -116,43 +111,29 @@
                     <span class="nombre-bodega">${BODEGAS[i]}</span>
                     <span class="puntos-vivos" id="pts-${id}">0 Pts</span>
                 </div>
-                <div class="grid">${[0,1,2,3,4,5].map(p => `<button class="btn-p" id="btn-${id}-${p}" onclick="gestionarVoto('${id}',${p})">${p}</button>`).join('')}</div>
+                <div class="grid">${[0,1,2,3,4,5].map(p => `<button class="btn-p" id="btn-${id}-${p}" onclick="puntear('${id}',${p})">${p}</button>`).join('')}</div>
             </div>
         `).join('');
 
-        // Escucha de datos en tiempo real
         db.ref().on('value', snap => {
             const data = snap.val() || {};
-            puntosNube = data.puntuacion || puntosNube;
+            puntosGlobales = data.puntuacion || {};
             IDS.forEach(id => {
                 const el = document.getElementById(`pts-${id}`);
-                if(el) el.innerText = (puntosNube[id] || 0) + " Pts";
+                if(el) el.innerText = (puntosGlobales[id] || 0) + " Pts";
             });
-            refrescarUI();
+            renderUI();
         });
     }
 
-    function gestionarVoto(id, p) {
-        if(contarHechos() >= 5) return;
-        
-        // Toggle: si pulsa el mismo, se quita
+    function puntear(id, p) {
+        if(getTurnos() >= 5) return;
         if(misVotos[id] === p) misVotos[id] = 0;
         else misVotos[id] = p;
 
-        actualizarBotones(id);
-    }
+        document.querySelectorAll(`#card-${id} .btn-p`).forEach(b => b.classList.remove('sel'));
+        if(misVotos[id] > 0) document.getElementById(`btn-${id}-${misVotos[id]}`).classList.add('sel');
 
-    function actualizarBotones(idModificado) {
-        // Marcar seleccionados
-        IDS.forEach(id => {
-            document.querySelectorAll(`#card-${id} .btn-p`).forEach(b => b.classList.remove('sel'));
-            if(misVotos[id] > 0) {
-                const btn = document.getElementById(`btn-${id}-${misVotos[id]}`);
-                if(btn) btn.classList.add('sel');
-            }
-        });
-
-        // Desactivar números ya usados
         document.querySelectorAll('.btn-p').forEach(btn => {
             const val = parseInt(btn.innerText);
             if(val === 0) return;
@@ -162,87 +143,73 @@
         });
     }
 
-    async function procesarEnvio() {
-        let hechos = contarHechos();
-        if(hechos >= 5) return;
+    async function enviarVoto() {
+        let t = getTurnos();
+        if(t >= 5) return;
 
-        let totalSeleccionado = Object.values(misVotos).reduce((a, b) => a + b, 0);
-        let msg = totalSeleccionado === 0 ? "¿Enviar votación vacía? (Gastará 1 turno)" : "¿Confirmar envío de votos?";
+        let suma = Object.values(misVotos).reduce((a, b) => a + b, 0);
+        let msg = suma === 0 ? "¿Enviar votación en blanco? (Contará como un turno)" : "¿Confirmar envío?";
         
         if(!confirm(msg)) return;
 
-        let updates = {};
+        let up = {};
         for(let id in misVotos) {
-            if(misVotos[id] > 0) {
-                updates[`puntuacion/${id}`] = (puntosNube[id] || 0) + misVotos[id];
-            }
+            if(misVotos[id] > 0) up[`puntuacion/${id}`] = (puntosGlobales[id] || 0) + misVotos[id];
         }
 
         try {
-            if(Object.keys(updates).length > 0) await db.ref().update(updates);
+            if(Object.keys(up).length > 0) await db.ref().update(up);
             await db.ref('participantes').push(Date.now());
-            
-            localStorage.setItem('votos_fuentesnuevas_v3', hechos + 1);
-            
-            // Limpiar para el siguiente turno
-            misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
-            document.querySelectorAll('.btn-p').forEach(b => { b.classList.remove('sel'); b.classList.remove('off'); });
-            
+            localStorage.setItem('votos_terminal_v4', t + 1);
             location.reload();
-        } catch (e) { alert("Error de conexión con la base de datos."); }
+        } catch (e) { alert("Error de red"); }
     }
 
-    function contarHechos() {
-        return parseInt(localStorage.getItem('votos_fuentesnuevas_v3') || "0");
-    }
+    function getTurnos() { return parseInt(localStorage.getItem('votos_terminal_v4') || "0"); }
 
-    function refrescarUI() {
-        const n = contarHechos();
+    function renderUI() {
+        const n = getTurnos();
         const btn = document.getElementById('btn-env');
         if(n >= 5) {
             btn.disabled = true;
             document.getElementById('txt-main').innerText = "AVANCE DE LA VOTACIÓN";
-            document.getElementById('txt-count').innerText = "Resultados en vivo activos";
+            document.getElementById('txt-count').innerText = "Puntos en tiempo real activados";
             document.querySelectorAll('.puntos-vivos').forEach(el => el.style.display = 'block');
         } else {
-            document.getElementById('txt-count').innerText = `Estás en la votación ${n+1} de 5`;
+            document.getElementById('txt-count').innerText = `Votación ${n+1} de 5`;
         }
     }
 
-    function accesoAdmin() {
-        if(document.getElementById('pw').value === '55555') {
-            document.getElementById('adm-opc').style.display = 'block';
-        } else { alert("Clave incorrecta"); }
+    function loginAdmin() {
+        if(document.getElementById('pw').value === '55555') document.getElementById('adm-opc').style.display = 'block';
     }
 
-    function mostrarActa() {
+    function verActa() {
         const ahora = new Date();
-        document.getElementById('fecha-acta').innerText = ahora.toLocaleDateString() + " | " + ahora.toLocaleTimeString();
-        
-        let html = ""; let max = -1; let ganador = "---";
+        document.getElementById('fecha-acta').innerText = ahora.toLocaleString();
+        let h = ""; let max = -1; let gan = "---";
         IDS.forEach((id, i) => {
-            const p = puntosNube[id] || 0;
-            if(p > max) { max = p; ganador = BODEGAS[i]; }
-            else if(p === max && p > 0) { ganador = "EMPATE"; }
-            html += `<div class="fila-acta"><span>${BODEGAS[i]}</span><strong>${p} Pts</strong></div>`;
+            const p = puntosGlobales[id] || 0;
+            if(p > max) { max = p; gan = BODEGAS[i]; }
+            else if(p === max && p > 0) { gan = "EMPATE"; }
+            h += `<div class="fila-acta"><span>${BODEGAS[i]}</span><strong>${p} Pts</strong></div>`;
         });
-
-        document.getElementById('nom-ganador').innerText = max > 0 ? ganador : "Sin votos";
-        document.getElementById('detalles-acta').innerHTML = html;
+        document.getElementById('nom-ganador').innerText = max > 0 ? gan : "Sin votos";
+        document.getElementById('detalles-acta').innerHTML = h;
         document.getElementById('informe').style.display = 'block';
     }
 
-    function resetGeneral() {
-        if(confirm("¿ELIMINAR TODOS LOS VOTOS? Esta acción no se puede deshacer.")) {
+    function resetApp() {
+        if(confirm("¿RESET TOTAL?")) {
             db.ref().set({ puntuacion: {vale:0, isa:0, moran:0, carreira:0, alvarez:0}, participantes: null });
             localStorage.clear();
             location.reload();
         }
     }
 
-    // Iniciar aplicación
-    window.onload = init;
+    init();
 </script>
 </body>
 </html>
+
 
