@@ -2,53 +2,86 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bodegas Fuentesnuevas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, 
+
+user-scalable=no">
+    <title>Bodegas Fuentesnuevas - V5 Final</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde-ok: #28a745; }
-        
-        body { background-color: var(--fondo); color: white; font-family: sans-serif; margin: 0; padding: 10px; }
-        .container { width: 100%; max-width: 400px; margin: auto; }
-        
-        header { text-align: center; margin-bottom: 10px; }
-        h1 { color: var(--oro); font-size: 1.4rem; margin: 0; text-transform: uppercase; }
-        .linea-roja { border-bottom: 3px solid var(--vino); width: 100%; margin-bottom: 15px; }
+        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde: 
 
-        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-        .header-bodega { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .nombre-bodega { font-weight: 900; font-size: 1.1rem; color: var(--oro); text-transform: uppercase; }
+#28a745; --blanco: #ffffff; }
+        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 
+
+0; padding: 10px; }
+        .container { width: 100%; max-width: 400px; margin: auto; text-align: center; }
         
-        .puntos-vivos { 
-            display: none; background: var(--vino); color: white; padding: 3px 10px; 
-            border-radius: 15px; font-size: 0.85rem; font-weight: bold; border: 1px solid var(--oro);
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 3px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; 
         }
+        h1 { color: var(--oro); font-size: 1rem; margin: 0; text-transform: uppercase; }
+        #btn-salir { background: #444; color: white; border: none; padding: 8px 15px; border-
+
+radius: 5px; font-weight: bold; cursor: pointer; }
+
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; 
+
+margin-bottom: 10px; position: relative; text-align: left; }
+        .bodega-nom { color: var(--oro); font-weight: bold; text-transform: uppercase; display: 
+
+block; margin-bottom: 10px; }
+        .pts-vivos { display: none; position: absolute; top: 12px; right: 12px; color: var(--oro); 
+
+font-weight: bold; font-size: 0.9rem; }
 
         .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
-        .btn-p { background: var(--tecla); color: #000; border: none; padding: 15px 0; border-radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        .btn-p.sel { background: var(--vino); color: white; box-shadow: 0 0 8px var(--oro); }
+        .btn-p { background: var(--tecla); color: black; border: none; padding: 15px 0; border-
+
+radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .btn-p.sel { background: var(--vino) !important; color: white !important; box-shadow: 0 0 
+
+8px var(--oro); }
         .btn-p.off { opacity: 0.15; pointer-events: none; }
 
-        #btn-env { 
-            width: 100%; padding: 22px; border-radius: 12px; font-size: 1.4rem; font-weight: 900; 
-            margin: 15px 0; text-transform: uppercase; border: none; cursor: pointer;
-            background-color: var(--verde-ok); color: white; 
+        #btn-enviar { 
+            width: 100%; padding: 20px; border-radius: 12px; font-size: 1.4rem; font-weight: 900; 
+            margin: 15px 0; background: var(--verde); color: white; border: none; cursor: pointer;
         }
-        #btn-env:disabled { background-color: #333 !important; color: #777 !important; cursor: not-allowed; }
-        .sub-btn { display: block; font-size: 0.8rem; margin-top: 5px; font-weight: normal; }
 
-        /* ACTA */
-        #informe { 
-            display: none; background: #fff; color: #000; padding: 20px; border-radius: 12px; 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 85%; max-width: 350px; z-index: 1000; border: 4px solid #000;
+        /* MODAL ADMINISTRACIÓN PROFESIONAL */
+        #acta { 
+            display: none; background: var(--blanco); color: #222; position: fixed; 
+            top: 50%; left: 50%; transform: translate(-50%, -50%); width: 88%; 
+            padding: 25px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000; text-align: left; border: 2px solid #ddd;
         }
-        .header-acta { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
-        .ganador-box { background: #fff9c4; border: 2px solid #fbc02d; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
-        .fila-acta { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .acta-header { text-align: center; border-bottom: 2px solid #eee; margin-bottom: 20px; 
+
+padding-bottom: 15px; }
+        .acta-header h2 { margin: 0; color: #000; font-size: 1.4rem; }
+        .acta-header .sub { font-weight: 900; color: var(--vino); margin: 5px 0; text-transform: 
+
+uppercase; }
+        
+        .acta-ganador-box { 
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%); 
+            border: 1px solid #fbc02d; padding: 15px; text-align: center; 
+            margin-bottom: 20px; border-radius: 12px;
+        }
+        .acta-ganador-box #acta-ganador { font-size: 1.6rem; font-weight: 900; color: #333; }
+
+        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-
+
+bottom: 1px solid #f0f0f0; }
+        .btn-cerrar { width: 100%; margin-top: 20px; padding: 15px; background: #222; color: 
+
+white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: 
+
+uppercase; }
     </style>
 </head>
 <body>
@@ -56,160 +89,159 @@
 <div class="container">
     <header>
         <h1>BODEGAS FUENTESNUEVAS</h1>
-        <div class="linea-roja"></div>
+        <button id="btn-salir" onclick="salirLimpio()">SALIR</button>
     </header>
 
-    <div id="lista"></div>
+    <div id="lista-bodegas"></div>
     
-    <button id="btn-env" onclick="enviarVoto()">
-        <span id="txt-main">ENVIAR MI VOTO</span>
-        <span id="txt-count" class="sub-btn">Cargando...</span>
+    <button id="btn-enviar" onclick="enviarVoto()">
+        ENVIAR MI VOTO
+        <div id="info-votos" style="font-size: 0.8rem; font-weight: normal; margin-top: 5px;"></div>
     </button>
 
-    <div style="text-align:center; margin-top: 20px;">
-        <button onclick="document.getElementById('pass-box').style.display='block'" style="background:none; border:none; color:#555; font-size:0.7rem; cursor:pointer;">ADMINISTRACIÓN</button>
-        <div id="pass-box" style="display:none; margin-top:10px;">
-            <input type="password" id="pw" placeholder="Clave" style="padding:5px; text-align:center;">
-            <button onclick="loginAdmin()">OK</button>
-            <div id="adm-opc" style="display:none; margin-top:10px;">
-                <button onclick="verActa()" style="background:var(--verde-ok); color:white; padding:10px; width:100%; margin-bottom:5px; border:none;">VER ACTA</button>
-                <button onclick="resetApp()" style="background:var(--vino); color:white; padding:10px; width:100%; border:none;">RESET</button>
-            </div>
+    <div id="acta">
+        <div class="acta-header">
+            <h2>ACTA VOTACIONES</h2>
+            <div class="sub">BODEGAS FUENTESNUEVAS</div>
+            <div id="acta-fecha" style="font-size: 0.75rem; color: #888;"></div>
         </div>
+        <div class="acta-ganador-box">
+            <small>🏆 BODEGA GANADORA</small>
+            <div id="acta-ganador">-</div>
+        </div>
+        <div id="acta-cuerpo"></div>
+        <button class="btn-cerrar" onclick="document.getElementById
+
+('acta').style.display='none'">Cerrar Acta</button>
     </div>
 
-    <div id="informe">
-        <div class="header-acta">
-            <h2 style="margin:0; font-size: 1.3rem;">ACTA VOTACIONES</h2>
-            <div style="margin:5px 0; font-weight: bold;">BODEGAS FUENTESNUEVAS</div>
-            <div id="fecha-acta" style="font-size: 0.8rem; color: #555;"></div>
-        </div>
-        <div class="ganador-box">
-            <small style="color: var(--vino); font-weight: bold;">🏆 BODEGA GANADORA</small>
-            <div id="nom-ganador" style="font-size: 1.5rem; font-weight: 900;">-</div>
-        </div>
-        <div id="detalles-acta"></div>
-        <button onclick="document.getElementById('informe').style.display='none'" style="width:100%; padding:10px; margin-top:15px; background:#000; color:#fff; border:none;">CERRAR</button>
-    </div>
+    <div style="margin-top:50px; opacity:0.02; cursor:pointer" onclick="admin()">admin</div>
 </div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" };
-    firebase.initializeApp(firebaseConfig);
+    // URL DE REDIRECCIÓN SOLO TRAS EL VOTO
+    const URL_POST_VOTO = 
+
+"https://www.diocesisastorga.es/recursos/cache/ba18fd8e2352fc18bbafaf0e596f42e2-
+
+0dfb3743fcc944a8b32b872f3f0d9d0c.JPG";
+
+    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-
+
+rtdb.firebaseio.com/" };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     const BODEGAS = ["VALE", "ISA", "MORÁN", "CARREIRA", "ÁLVAREZ"];
     const IDS = ["vale", "isa", "moran", "carreira", "alvarez"];
     let misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
-    let puntosGlobales = {};
+    let nube = {};
 
     function init() {
-        const listaDiv = document.getElementById('lista');
-        listaDiv.innerHTML = IDS.map((id, i) => `
+        const cont = document.getElementById('lista-bodegas');
+        cont.innerHTML = IDS.map((id, i) => `
             <div class="card" id="card-${id}">
-                <div class="header-bodega">
-                    <span class="nombre-bodega">${BODEGAS[i]}</span>
-                    <span class="puntos-vivos" id="pts-${id}">0 Pts</span>
-                </div>
-                <div class="grid">${[0,1,2,3,4,5].map(p => `<button class="btn-p" id="btn-${id}-${p}" onclick="puntear('${id}',${p})">${p}</button>`).join('')}</div>
+                <span class="pts-vivos" id="live-${id}">0 Pts</span>
+                <span class="bodega-nom">${BODEGAS[i]}</span>
+                <div class="grid">${[0,1,2,3,4,5].map(v => `<button class="btn-p" id="b-${id}-${v}" 
+
+onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
             </div>
         `).join('');
 
-        db.ref().on('value', snap => {
-            const data = snap.val() || {};
-            puntosGlobales = data.puntuacion || {};
-            IDS.forEach(id => {
-                const el = document.getElementById(`pts-${id}`);
-                if(el) el.innerText = (puntosGlobales[id] || 0) + " Pts";
-            });
-            renderUI();
+        db.ref('puntuacion').on('value', snap => {
+            nube = snap.val() || {};
+            actualizarUI();
         });
     }
 
-    function puntear(id, p) {
-        if(getTurnos() >= 5) return;
-        if(misVotos[id] === p) misVotos[id] = 0;
-        else misVotos[id] = p;
+    function clic(id, pts) {
+        if (getV() >= 5) return;
+        if (misVotos[id] === pts) misVotos[id] = 0;
+        else misVotos[id] = pts;
 
-        document.querySelectorAll(`#card-${id} .btn-p`).forEach(b => b.classList.remove('sel'));
-        if(misVotos[id] > 0) document.getElementById(`btn-${id}-${misVotos[id]}`).classList.add('sel');
+        IDS.forEach(bId => {
+            document.querySelectorAll(`#card-${bId} .btn-p`).forEach(btn => {
+                const val = parseInt(btn.innerText);
+                btn.classList.remove('sel', 'off');
+                if (val === misVotos[bId] && val !== 0) btn.classList.add('sel');
+                if (val !== 0 && Object.keys(misVotos).some(k => k !== bId && misVotos[k] === val)) 
 
-        document.querySelectorAll('.btn-p').forEach(btn => {
-            const val = parseInt(btn.innerText);
-            if(val === 0) return;
-            const bId = btn.id.split('-')[1];
-            const estaUsado = Object.keys(misVotos).some(k => k !== bId && misVotos[k] === val);
-            btn.classList.toggle('off', estaUsado);
+btn.classList.add('off');
+            });
         });
     }
 
     async function enviarVoto() {
-        let t = getTurnos();
-        if(t >= 5) return;
-
-        let suma = Object.values(misVotos).reduce((a, b) => a + b, 0);
-        let msg = suma === 0 ? "¿Enviar votación en blanco? (Contará como un turno)" : "¿Confirmar envío?";
-        
-        if(!confirm(msg)) return;
-
+        let n = getV();
+        if (n >= 5) return;
         let up = {};
-        for(let id in misVotos) {
-            if(misVotos[id] > 0) up[`puntuacion/${id}`] = (puntosGlobales[id] || 0) + misVotos[id];
-        }
-
+        IDS.forEach(id => up[id] = (nube[id] || 0) + (misVotos[id] || 0));
         try {
-            if(Object.keys(up).length > 0) await db.ref().update(up);
-            await db.ref('participantes').push(Date.now());
-            localStorage.setItem('votos_terminal_v4', t + 1);
-            location.reload();
-        } catch (e) { alert("Error de red"); }
+            await db.ref('puntuacion').update(up);
+            localStorage.setItem('votos_final_v5', n + 1);
+            window.location.href = URL_POST_VOTO;
+        } catch (e) { 
+            localStorage.setItem('votos_final_v5', n + 1);
+            window.location.href = URL_POST_VOTO;
+        }
     }
 
-    function getTurnos() { return parseInt(localStorage.getItem('votos_terminal_v4') || "0"); }
-
-    function renderUI() {
-        const n = getTurnos();
-        const btn = document.getElementById('btn-env');
-        if(n >= 5) {
-            btn.disabled = true;
-            document.getElementById('txt-main').innerText = "AVANCE DE LA VOTACIÓN";
-            document.getElementById('txt-count').innerText = "Puntos en tiempo real activados";
-            document.querySelectorAll('.puntos-vivos').forEach(el => el.style.display = 'block');
+    // NUEVA FUNCIÓN SALIR: Intenta volver atrás o cerrar
+    function salirLimpio() { 
+        if (window.history.length > 1) {
+            window.history.back();
         } else {
-            document.getElementById('txt-count').innerText = `Votación ${n+1} de 5`;
+            window.close();
+            // Si el navegador bloquea el cierre, redirigimos a una página neutra (google por 
+
+ejemplo)
+            setTimeout(() => { window.location.href = "https://www.google.com"; }, 200);
         }
     }
 
-    function loginAdmin() {
-        if(document.getElementById('pw').value === '55555') document.getElementById('adm-opc').style.display = 'block';
-    }
+    function getV() { return parseInt(localStorage.getItem('votos_final_v5') || "0"); }
 
-    function verActa() {
-        const ahora = new Date();
-        document.getElementById('fecha-acta').innerText = ahora.toLocaleString();
-        let h = ""; let max = -1; let gan = "---";
-        IDS.forEach((id, i) => {
-            const p = puntosGlobales[id] || 0;
-            if(p > max) { max = p; gan = BODEGAS[i]; }
-            else if(p === max && p > 0) { gan = "EMPATE"; }
-            h += `<div class="fila-acta"><span>${BODEGAS[i]}</span><strong>${p} Pts</strong></div>`;
-        });
-        document.getElementById('nom-ganador').innerText = max > 0 ? gan : "Sin votos";
-        document.getElementById('detalles-acta').innerHTML = h;
-        document.getElementById('informe').style.display = 'block';
-    }
+    function actualizarUI() {
+        const n = getV();
+        document.getElementById('info-votos').innerText = n < 5 ? `Votación ${n+1} de 5` : 
 
-    function resetApp() {
-        if(confirm("¿RESET TOTAL?")) {
-            db.ref().set({ puntuacion: {vale:0, isa:0, moran:0, carreira:0, alvarez:0}, participantes: null });
-            localStorage.clear();
-            location.reload();
+"Completado";
+        if (n >= 5) {
+            document.getElementById('btn-enviar').style.display = 'none';
+            IDS.forEach(id => {
+                const el = document.getElementById('live-'+id);
+                el.innerText = (nube[id] || 0) + " Pts";
+                el.style.display = 'block';
+            });
         }
     }
 
-    init();
+    function admin() {
+        if (prompt("Clave:") === '55555') {
+            const m = prompt("1: Acta, 2: Reset");
+            if (m === '1') {
+                document.getElementById('acta-fecha').innerText = new Date().toLocaleString();
+                let h = "", max = -1, win = "---";
+                IDS.forEach((id, i) => {
+                    const pts = nube[id] || 0;
+                    if (pts > max) { max = pts; win = BODEGAS[i]; }
+                    else if (pts === max && pts > 0) win = "EMPATE";
+                    h += `<div class="fila-puntos"><span>${BODEGAS[i]}</span><b>${pts} 
+
+Pts</b></div>`;
+                });
+                document.getElementById('acta-ganador').innerText = max > 0 ? win : "---";
+                document.getElementById('acta-cuerpo').innerHTML = h;
+                document.getElementById('acta').style.display = 'block';
+            } else if (m === '2') {
+                if(confirm("¿RESET TOTAL?")){ db.ref('puntuacion').set
+
+({vale:0,isa:0,moran:0,carreira:0,alvarez:0}); localStorage.clear(); location.reload(); }
+            }
+        }
+    }
+    window.onload = init;
 </script>
 </body>
 </html>
-
-
