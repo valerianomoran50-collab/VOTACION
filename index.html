@@ -2,21 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, 
-
-user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bodegas Fuentesnuevas - V5 Final</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde: 
-
-#28a745; --blanco: #ffffff; }
-        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 
-
-0; padding: 10px; }
+        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde: #28a745; --blanco: #ffffff; }
+        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
         .container { width: 100%; max-width: 400px; margin: auto; text-align: center; }
         
         header { 
@@ -24,27 +18,15 @@ user-scalable=no">
             border-bottom: 3px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; 
         }
         h1 { color: var(--oro); font-size: 1rem; margin: 0; text-transform: uppercase; }
-        #btn-salir { background: #444; color: white; border: none; padding: 8px 15px; border-
+        #btn-salir { background: #444; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
-radius: 5px; font-weight: bold; cursor: pointer; }
-
-        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; 
-
-margin-bottom: 10px; position: relative; text-align: left; }
-        .bodega-nom { color: var(--oro); font-weight: bold; text-transform: uppercase; display: 
-
-block; margin-bottom: 10px; }
-        .pts-vivos { display: none; position: absolute; top: 12px; right: 12px; color: var(--oro); 
-
-font-weight: bold; font-size: 0.9rem; }
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 10px; position: relative; text-align: left; }
+        .bodega-nom { color: var(--oro); font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 10px; }
+        .pts-vivos { display: none; position: absolute; top: 12px; right: 12px; color: var(--oro); font-weight: bold; font-size: 0.9rem; }
 
         .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
-        .btn-p { background: var(--tecla); color: black; border: none; padding: 15px 0; border-
-
-radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        .btn-p.sel { background: var(--vino) !important; color: white !important; box-shadow: 0 0 
-
-8px var(--oro); }
+        .btn-p { background: var(--tecla); color: black; border: none; padding: 15px 0; border-radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .btn-p.sel { background: var(--vino) !important; color: white !important; box-shadow: 0 0 8px var(--oro); }
         .btn-p.off { opacity: 0.15; pointer-events: none; }
 
         #btn-enviar { 
@@ -59,13 +41,9 @@ radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
             padding: 25px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             z-index: 1000; text-align: left; border: 2px solid #ddd;
         }
-        .acta-header { text-align: center; border-bottom: 2px solid #eee; margin-bottom: 20px; 
-
-padding-bottom: 15px; }
+        .acta-header { text-align: center; border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 15px; }
         .acta-header h2 { margin: 0; color: #000; font-size: 1.4rem; }
-        .acta-header .sub { font-weight: 900; color: var(--vino); margin: 5px 0; text-transform: 
-
-uppercase; }
+        .acta-header .sub { font-weight: 900; color: var(--vino); margin: 5px 0; text-transform: uppercase; }
         
         .acta-ganador-box { 
             background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%); 
@@ -74,14 +52,8 @@ uppercase; }
         }
         .acta-ganador-box #acta-ganador { font-size: 1.6rem; font-weight: 900; color: #333; }
 
-        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-
-
-bottom: 1px solid #f0f0f0; }
-        .btn-cerrar { width: 100%; margin-top: 20px; padding: 15px; background: #222; color: 
-
-white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: 
-
-uppercase; }
+        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-bottom: 1px solid #f0f0f0; }
+        .btn-cerrar { width: 100%; margin-top: 20px; padding: 15px; background: #222; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -110,9 +82,7 @@ uppercase; }
             <div id="acta-ganador">-</div>
         </div>
         <div id="acta-cuerpo"></div>
-        <button class="btn-cerrar" onclick="document.getElementById
-
-('acta').style.display='none'">Cerrar Acta</button>
+        <button class="btn-cerrar" onclick="document.getElementById('acta').style.display='none'">Cerrar Acta</button>
     </div>
 
     <div style="margin-top:50px; opacity:0.02; cursor:pointer" onclick="admin()">admin</div>
@@ -120,15 +90,9 @@ uppercase; }
 
 <script>
     // URL DE REDIRECCIÓN SOLO TRAS EL VOTO
-    const URL_POST_VOTO = 
+    const URL_POST_VOTO = "https://www.diocesisastorga.es/recursos/cache/ba18fd8e2352fc18bbafaf0e596f42e2-0dfb3743fcc944a8b32b872f3f0d9d0c.JPG";
 
-"https://www.diocesisastorga.es/recursos/cache/ba18fd8e2352fc18bbafaf0e596f42e2-
-
-0dfb3743fcc944a8b32b872f3f0d9d0c.JPG";
-
-    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-
-
-rtdb.firebaseio.com/" };
+    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -143,9 +107,7 @@ rtdb.firebaseio.com/" };
             <div class="card" id="card-${id}">
                 <span class="pts-vivos" id="live-${id}">0 Pts</span>
                 <span class="bodega-nom">${BODEGAS[i]}</span>
-                <div class="grid">${[0,1,2,3,4,5].map(v => `<button class="btn-p" id="b-${id}-${v}" 
-
-onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
+                <div class="grid">${[0,1,2,3,4,5].map(v => `<button class="btn-p" id="b-${id}-${v}" onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
             </div>
         `).join('');
 
@@ -165,9 +127,7 @@ onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
                 const val = parseInt(btn.innerText);
                 btn.classList.remove('sel', 'off');
                 if (val === misVotos[bId] && val !== 0) btn.classList.add('sel');
-                if (val !== 0 && Object.keys(misVotos).some(k => k !== bId && misVotos[k] === val)) 
-
-btn.classList.add('off');
+                if (val !== 0 && Object.keys(misVotos).some(k => k !== bId && misVotos[k] === val)) btn.classList.add('off');
             });
         });
     }
@@ -193,9 +153,7 @@ btn.classList.add('off');
             window.history.back();
         } else {
             window.close();
-            // Si el navegador bloquea el cierre, redirigimos a una página neutra (google por 
-
-ejemplo)
+            // Si el navegador bloquea el cierre, redirigimos a una página neutra (google por ejemplo)
             setTimeout(() => { window.location.href = "https://www.google.com"; }, 200);
         }
     }
@@ -204,9 +162,7 @@ ejemplo)
 
     function actualizarUI() {
         const n = getV();
-        document.getElementById('info-votos').innerText = n < 5 ? `Votación ${n+1} de 5` : 
-
-"Completado";
+        document.getElementById('info-votos').innerText = n < 5 ? `Votación ${n+1} de 5` : "Completado";
         if (n >= 5) {
             document.getElementById('btn-enviar').style.display = 'none';
             IDS.forEach(id => {
@@ -227,17 +183,13 @@ ejemplo)
                     const pts = nube[id] || 0;
                     if (pts > max) { max = pts; win = BODEGAS[i]; }
                     else if (pts === max && pts > 0) win = "EMPATE";
-                    h += `<div class="fila-puntos"><span>${BODEGAS[i]}</span><b>${pts} 
-
-Pts</b></div>`;
+                    h += `<div class="fila-puntos"><span>${BODEGAS[i]}</span><b>${pts} Pts</b></div>`;
                 });
                 document.getElementById('acta-ganador').innerText = max > 0 ? win : "---";
                 document.getElementById('acta-cuerpo').innerHTML = h;
                 document.getElementById('acta').style.display = 'block';
             } else if (m === '2') {
-                if(confirm("¿RESET TOTAL?")){ db.ref('puntuacion').set
-
-({vale:0,isa:0,moran:0,carreira:0,alvarez:0}); localStorage.clear(); location.reload(); }
+                if(confirm("¿RESET TOTAL?")){ db.ref('puntuacion').set({vale:0,isa:0,moran:0,carreira:0,alvarez:0}); localStorage.clear(); location.reload(); }
             }
         }
     }
@@ -245,3 +197,4 @@ Pts</b></div>`;
 </script>
 </body>
 </html>
+
