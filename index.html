@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bodegas Fuentesnuevas - V7.1 Empate</title>
+    <title>Bodegas Fuentesnuevas - V8.0 Privacidad</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde: #28a745; --blanco: #ffffff; }
-        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; user-select: none; }
+        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; user-select: none; overflow-x: hidden; }
         .container { width: 100%; max-width: 400px; margin: auto; text-align: center; }
         
         header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; }
@@ -35,44 +35,63 @@
         #btn-enviar { width: 100%; padding: 20px; border-radius: 12px; font-size: 1.3rem; font-weight: 900; margin: 15px 0; background: var(--verde); color: white; border: none; cursor: pointer; }
         #btn-enviar:disabled { background: #444; color: #888; cursor: not-allowed; }
 
-        /* MODALES */
-        .modal { display: none; background: white; color: #222; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 380px; padding: 20px; border-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); z-index: 1000; }
+        /* MODALES GENERALES */
+        .modal { display: none; background: white; color: #222; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 380px; padding: 20px; border-radius: 15px; box-shadow: 0 0 100px rgba(0,0,0,0.9); z-index: 1000; text-align: center; }
+        .modal-h { border-bottom: 1px solid #eee; margin-bottom: 15px; padding-bottom: 10px; }
+        .modal-h h3 { margin: 0; color: #000; }
+        .btn-admin { width: 100%; padding: 15px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 1rem; }
         .input-pass { width: 100%; padding: 15px; font-size: 1.5rem; text-align: center; border: 2px solid #ccc; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn-admin { width: 100%; padding: 15px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-bottom: 1px solid #eee; font-size: 1.1rem; }
+        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-bottom: 1px solid #eee; font-size: 1.1rem; text-align: left; }
+        
+        /* OVERLAY PARA BLOQUEAR FONDO */
+        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; }
     </style>
 </head>
 <body>
 
+<div id="overlay"></div>
+
 <div class="container">
     <header>
         <h1>BODEGAS FUENTESNUEVAS</h1>
-        <button id="btn-salir-head" onclick="salirApp()">SALIR</button>
+        <button id="btn-salir-head" onclick="askSalir()">SALIR</button>
     </header>
 
     <div id="lista-bodegas"></div>
-    
     <button id="btn-enviar" onclick="enviarVoto()" disabled>CONECTANDO...</button>
     <div id="info-votos" style="font-size: 0.9rem; color: #aaa; margin-top: -10px; margin-bottom: 15px; font-weight: bold;"></div>
 
+    <div id="modal-msg" class="modal">
+        <div class="modal-h"><h3 id="msg-titulo">AVISO</h3></div>
+        <p id="msg-texto" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
+        <button class="btn-admin" style="background:var(--vino); color:white;" onclick="cerrarModales()">ACEPTAR</button>
+    </div>
+
+    <div id="modal-confirm" class="modal">
+        <div class="modal-h"><h3 id="conf-titulo">¿ESTÁS SEGURO?</h3></div>
+        <p id="conf-texto" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
+        <button id="btn-conf-si" class="btn-admin" style="background:var(--verde); color:white;">SÍ, CONTINUAR</button>
+        <button class="btn-admin" style="background:#eee;" onclick="cerrarModales()">CANCELAR</button>
+    </div>
+
     <div id="modal-login" class="modal">
-        <h3 style="text-align:center; margin-top:0;">ADMINISTRACIÓN</h3>
+        <div class="modal-h"><h3>ACCESO ADMIN</h3></div>
         <input type="password" id="pass-admin" class="input-pass" placeholder="•••••" inputmode="numeric">
         <button class="btn-admin" style="background:var(--vino); color:white;" onclick="entrarAdmin()">ENTRAR</button>
         <button class="btn-admin" style="background:#eee;" onclick="cerrarModales()">CANCELAR</button>
     </div>
 
     <div id="modal-opciones" class="modal">
-        <h3 style="text-align:center; margin-top:0;">OPCIONES ADMIN</h3>
-        <button class="btn-admin" style="background:#007bff; color:white;" onclick="verActa()">VER RESULTADOS (ACTA)</button>
-        <button class="btn-admin" style="background:#dc3545; color:white;" onclick="resetVotacion()">REINICIAR TODO</button>
+        <div class="modal-h"><h3>OPCIONES</h3></div>
+        <button class="btn-admin" style="background:#007bff; color:white;" onclick="verActa()">VER RESULTADOS</button>
+        <button class="btn-admin" style="background:#dc3545; color:white;" onclick="askReset()">REINICIAR TODO</button>
         <button class="btn-admin" style="background:#eee;" onclick="cerrarModales()">CERRAR</button>
     </div>
 
     <div id="modal-acta" class="modal">
-        <h3 style="text-align:center; margin-top:0;">ACTA DE RESULTADOS</h3>
+        <div class="modal-h"><h3>ACTA FINAL</h3></div>
         <div id="acta-cuerpo"></div>
-        <div id="acta-ganador" style="background:#fff9c4; padding:15px; text-align:center; font-weight:bold; margin-top:15px; border-radius:8px; border: 2px solid var(--oro); line-height: 1.4;"></div>
+        <div id="acta-ganador" style="background:#fff9c4; padding:15px; text-align:center; font-weight:bold; margin-top:15px; border-radius:8px; border: 2px solid var(--oro);"></div>
         <button class="btn-admin" style="background:#222; color:white; margin-top:15px;" onclick="cerrarModales()">CERRAR</button>
     </div>
 
@@ -89,6 +108,36 @@
     let misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
     let nube = {vale:0, isa:0, moran:0, carreira:0, alvarez:0};
 
+    // --- LÓGICA DE MODALES PERSONALIZADOS ---
+    function mostrarMsg(titulo, texto, recargar = false) {
+        cerrarModales();
+        document.getElementById('msg-titulo').innerText = titulo;
+        document.getElementById('msg-texto').innerText = texto;
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modal-msg').style.display = 'block';
+        if(recargar) {
+            document.querySelector('#modal-msg button').onclick = () => location.reload();
+        }
+    }
+
+    function mostrarConfirm(titulo, texto, accionSi) {
+        cerrarModales();
+        document.getElementById('conf-titulo').innerText = titulo;
+        document.getElementById('conf-texto').innerText = texto;
+        const btnSi = document.getElementById('btn-conf-si');
+        btnSi.onclick = () => { accionSi(); cerrarModales(); };
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modal-confirm').style.display = 'block';
+    }
+
+    function cerrarModales() {
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        document.getElementById('overlay').style.display = 'none';
+        // Resetear onclick del botón aceptar por si acaso
+        document.querySelector('#modal-msg button').onclick = cerrarModales;
+    }
+
+    // --- FUNCIONALIDAD APP ---
     db.ref('puntuacion').on('value', snap => {
         const data = snap.val();
         if(data) { nube = data; actualizarUI(); }
@@ -108,9 +157,8 @@
 
     function clic(id, pts) {
         if (getV() >= 5) return;
-        if (misVotos[id] === pts) {
-            misVotos[id] = 0;
-        } else {
+        if (misVotos[id] === pts) { misVotos[id] = 0; } 
+        else {
             IDS.forEach(key => { if(misVotos[key] === pts) misVotos[key] = 0; });
             misVotos[id] = pts;
         }
@@ -126,8 +174,9 @@
 
     function enviarVoto() {
         const n = getV();
+        if (n >= 5) return;
         const algunVoto = Object.values(misVotos).some(v => v > 0);
-        if (!algunVoto) return alert("Selecciona al menos una puntuación.");
+        if (!algunVoto) { mostrarMsg("AVISO", "Debes seleccionar al menos una puntuación."); return; }
 
         const btn = document.getElementById('btn-enviar');
         btn.disabled = true;
@@ -141,10 +190,11 @@
         }, (error, committed) => {
             if (committed) {
                 localStorage.setItem('votos_final_v5', n + 1);
-                misVotos = { vale:0, isa:0, moran:0, carreira:0, alvarez:0 };
-                alert("¡Voto registrado!");
-                location.reload(); 
-            } else { alert("Error."); actualizarUI(); }
+                mostrarMsg("¡ÉXITO!", "Voto registrado correctamente.", true);
+            } else { 
+                mostrarMsg("ERROR", "No se pudo conectar con la base de datos."); 
+                actualizarUI(); 
+            }
         });
     }
 
@@ -152,7 +202,7 @@
         const n = getV();
         const btn = document.getElementById('btn-enviar');
         const info = document.getElementById('info-votos');
-        if(info) info.innerText = n < 5 ? `TURNO ACTUAL: PARTICIPANTE ${n+1}` : "VOTACIÓN FINALIZADA";
+        if(info) info.innerText = n < 5 ? `TURNO: PARTICIPANTE ${n+1}` : "VOTACIÓN FINALIZADA";
         IDS.forEach(id => {
             const el = document.getElementById('live-'+id);
             if(el) el.innerText = (nube[id] || 0) + " Pts";
@@ -168,57 +218,50 @@
     }
 
     function getV() { return parseInt(localStorage.getItem('votos_final_v5') || "0"); }
-    function abrirLogin() { document.getElementById('modal-login').style.display = 'block'; }
-    function cerrarModales() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-    
+    function abrirLogin() { document.getElementById('overlay').style.display = 'block'; document.getElementById('modal-login').style.display = 'block'; }
     function entrarAdmin() {
         if (document.getElementById('pass-admin').value === '55555') {
             cerrarModales();
+            document.getElementById('overlay').style.display = 'block';
             document.getElementById('modal-opciones').style.display = 'block';
-        } else { alert("Error"); }
+        } else { mostrarMsg("ERROR", "Clave incorrecta."); document.getElementById('pass-admin').value=""; }
     }
 
-    // LÓGICA DE DETECCIÓN DE EMPATES MÚLTIPLES
     function verActa() {
         cerrarModales();
         let h = "", max = -1, ganadores = [];
-        
-        // 1. Encontrar la puntuación máxima
         IDS.forEach(id => { if (nube[id] > max) max = nube[id]; });
-
-        // 2. Identificar quiénes tienen esa puntuación (si es mayor a 0)
         IDS.forEach((id, i) => {
             const p = nube[id] || 0;
             if (p === max && max > 0) ganadores.push(NOMS[i]);
             h += `<div class="fila-puntos"><span>${NOMS[i]}</span><b>${p} Pts</b></div>`;
         });
-
         document.getElementById('acta-cuerpo').innerHTML = h;
-        
-        // 3. Mostrar mensaje personalizado según si hay uno o varios ganadores
         const divG = document.getElementById('acta-ganador');
-        if (max <= 0) {
-            divG.innerHTML = "ESPERANDO VOTOS";
-        } else if (ganadores.length > 1) {
-            divG.innerHTML = `🤝 EMPATE ENTRE:<br><span style="color:var(--vino); font-size:1.2rem;">${ganadores.join(" & ")}</span>`;
-        } else {
-            divG.innerHTML = `🏆 GANADOR:<br><span style="color:var(--vino); font-size:1.2rem;">${ganadores[0]}</span>`;
-        }
-        
+        if (max <= 0) divG.innerHTML = "ESPERANDO VOTOS";
+        else if (ganadores.length > 1) divG.innerHTML = `🤝 EMPATE:<br>${ganadores.join(" & ")}`;
+        else divG.innerHTML = `🏆 GANADOR: ${ganadores[0]}`;
+        document.getElementById('overlay').style.display = 'block';
         document.getElementById('modal-acta').style.display = 'block';
     }
 
-    function resetVotacion() {
-        if (confirm("¿BORRAR TODO?")) {
+    function askReset() {
+        mostrarConfirm("REINICIAR", "¿Seguro que quieres borrar todos los votos de la nube?", () => {
             db.ref('puntuacion').set({vale:0, isa:0, moran:0, carreira:0, alvarez:0}).then(() => {
                 localStorage.clear();
                 location.reload();
             });
-        }
+        });
     }
 
-    function salirApp() { if(confirm("¿Salir?")) window.location.href = "https://www.google.com"; }
+    function askSalir() {
+        mostrarConfirm("SALIR", "¿Quieres cerrar la aplicación?", () => {
+            window.location.href = "https://www.google.com";
+        });
+    }
+
     window.onload = init;
 </script>
 </body>
 </html>
+
