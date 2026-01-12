@@ -2,37 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, 
-
-user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bodegas Fuentesnuevas - V7.1 Empate</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde: 
-
-#28a745; --blanco: #ffffff; }
-        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 
-
-0; padding: 10px; user-select: none; }
+        :root { --vino: #b30000; --oro: #FFFF00; --fondo: #121212; --tecla: #eeeeee; --verde: #28a745; --blanco: #ffffff; }
+        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; user-select: none; }
         .container { width: 100%; max-width: 400px; margin: auto; text-align: center; }
         
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 
-
-3px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--vino); padding-bottom: 10px; margin-bottom: 15px; }
         h1 { color: var(--oro); font-size: 0.9rem; margin: 0; text-transform: uppercase; }
-        #btn-salir-head { background: #444; color: white; border: none; padding: 8px 15px; 
+        #btn-salir-head { background: #444; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
 
-border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-
-        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; 
-
-margin-bottom: 10px; position: relative; text-align: left; }
-        .bodega-nom { color: var(--oro); font-weight: bold; text-transform: uppercase; display: 
-
-block; margin-bottom: 10px; font-size: 1.1rem; }
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 10px; position: relative; text-align: left; }
+        .bodega-nom { color: var(--oro); font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 10px; font-size: 1.1rem; }
         
         .pts-vivos { 
             position: absolute; top: 10px; right: 10px; 
@@ -43,35 +29,17 @@ block; margin-bottom: 10px; font-size: 1.1rem; }
         }
 
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
-        .btn-p { background: var(--tecla); color: black; border: none; padding: 15px 0; border-
+        .btn-p { background: var(--tecla); color: black; border: none; padding: 15px 0; border-radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .btn-p.sel { background: var(--vino) !important; color: white !important; box-shadow: 0 0 10px var(--oro); transform: scale(1.05); }
 
-radius: 4px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        .btn-p.sel { background: var(--vino) !important; color: white !important; box-shadow: 0 0 
-
-10px var(--oro); transform: scale(1.05); }
-
-        #btn-enviar { width: 100%; padding: 20px; border-radius: 12px; font-size: 1.3rem; font-
-
-weight: 900; margin: 15px 0; background: var(--verde); color: white; border: none; cursor: 
-
-pointer; }
+        #btn-enviar { width: 100%; padding: 20px; border-radius: 12px; font-size: 1.3rem; font-weight: 900; margin: 15px 0; background: var(--verde); color: white; border: none; cursor: pointer; }
         #btn-enviar:disabled { background: #444; color: #888; cursor: not-allowed; }
 
         /* MODALES */
-        .modal { display: none; background: white; color: #222; position: fixed; top: 50%; left: 
-
-50%; transform: translate(-50%, -50%); width: 90%; max-width: 380px; padding: 20px; border-
-
-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); z-index: 1000; }
-        .input-pass { width: 100%; padding: 15px; font-size: 1.5rem; text-align: center; border: 2px 
-
-solid #ccc; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn-admin { width: 100%; padding: 15px; margin: 5px 0; border: none; border-radius: 8px; 
-
-font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-
-
-bottom: 1px solid #eee; font-size: 1.1rem; }
+        .modal { display: none; background: white; color: #222; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 380px; padding: 20px; border-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); z-index: 1000; }
+        .input-pass { width: 100%; padding: 15px; font-size: 1.5rem; text-align: center; border: 2px solid #ccc; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
+        .btn-admin { width: 100%; padding: 15px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .fila-puntos { display: flex; justify-content: space-between; padding: 10px 5px; border-bottom: 1px solid #eee; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -85,58 +53,34 @@ bottom: 1px solid #eee; font-size: 1.1rem; }
     <div id="lista-bodegas"></div>
     
     <button id="btn-enviar" onclick="enviarVoto()" disabled>CONECTANDO...</button>
-    <div id="info-votos" style="font-size: 0.9rem; color: #aaa; margin-top: -10px; margin-bottom: 
-
-15px; font-weight: bold;"></div>
+    <div id="info-votos" style="font-size: 0.9rem; color: #aaa; margin-top: -10px; margin-bottom: 15px; font-weight: bold;"></div>
 
     <div id="modal-login" class="modal">
         <h3 style="text-align:center; margin-top:0;">ADMINISTRACIÓN</h3>
-        <input type="password" id="pass-admin" class="input-pass" placeholder="•••••" 
-
-inputmode="numeric">
-        <button class="btn-admin" style="background:var(--vino); color:white;" 
-
-onclick="entrarAdmin()">ENTRAR</button>
-        <button class="btn-admin" style="background:#eee;" onclick="cerrarModales
-
-()">CANCELAR</button>
+        <input type="password" id="pass-admin" class="input-pass" placeholder="•••••" inputmode="numeric">
+        <button class="btn-admin" style="background:var(--vino); color:white;" onclick="entrarAdmin()">ENTRAR</button>
+        <button class="btn-admin" style="background:#eee;" onclick="cerrarModales()">CANCELAR</button>
     </div>
 
     <div id="modal-opciones" class="modal">
         <h3 style="text-align:center; margin-top:0;">OPCIONES ADMIN</h3>
-        <button class="btn-admin" style="background:#007bff; color:white;" onclick="verActa
-
-()">VER RESULTADOS (ACTA)</button>
-        <button class="btn-admin" style="background:#dc3545; color:white;" 
-
-onclick="resetVotacion()">REINICIAR TODO</button>
-        <button class="btn-admin" style="background:#eee;" onclick="cerrarModales
-
-()">CERRAR</button>
+        <button class="btn-admin" style="background:#007bff; color:white;" onclick="verActa()">VER RESULTADOS (ACTA)</button>
+        <button class="btn-admin" style="background:#dc3545; color:white;" onclick="resetVotacion()">REINICIAR TODO</button>
+        <button class="btn-admin" style="background:#eee;" onclick="cerrarModales()">CERRAR</button>
     </div>
 
     <div id="modal-acta" class="modal">
         <h3 style="text-align:center; margin-top:0;">ACTA DE RESULTADOS</h3>
         <div id="acta-cuerpo"></div>
-        <div id="acta-ganador" style="background:#fff9c4; padding:15px; text-align:center; font-
-
-weight:bold; margin-top:15px; border-radius:8px; border: 2px solid var(--oro); line-height: 
-
-1.4;"></div>
-        <button class="btn-admin" style="background:#222; color:white; margin-top:15px;" 
-
-onclick="cerrarModales()">CERRAR</button>
+        <div id="acta-ganador" style="background:#fff9c4; padding:15px; text-align:center; font-weight:bold; margin-top:15px; border-radius:8px; border: 2px solid var(--oro); line-height: 1.4;"></div>
+        <button class="btn-admin" style="background:#222; color:white; margin-top:15px;" onclick="cerrarModales()">CERRAR</button>
     </div>
 
-    <div style="margin-top:40px; opacity:0.1; cursor:pointer; padding:20px; font-size: 0.7rem;" 
-
-onclick="abrirLogin()">acceso administración</div>
+    <div style="margin-top:40px; opacity:0.1; cursor:pointer; padding:20px; font-size: 0.7rem;" onclick="abrirLogin()">acceso administración</div>
 </div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-
-
-rtdb.firebaseio.com/" };
+    const firebaseConfig = { databaseURL: "https://proyec-bodegasfuentesnuevas-default-rtdb.firebaseio.com/" };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -156,9 +100,7 @@ rtdb.firebaseio.com/" };
             <div class="card" id="card-${id}">
                 <span class="pts-vivos" id="live-${id}">0 Pts</span>
                 <span class="bodega-nom">${NOMS[i]}</span>
-                <div class="grid">${[1,2,3,4,5].map(v => `<button class="btn-p" id="b-${id}-${v}" 
-
-onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
+                <div class="grid">${[1,2,3,4,5].map(v => `<button class="btn-p" id="b-${id}-${v}" onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
             </div>
         `).join('');
         actualizarUI();
@@ -210,9 +152,7 @@ onclick="clic('${id}',${v})">${v}</button>`).join('')}</div>
         const n = getV();
         const btn = document.getElementById('btn-enviar');
         const info = document.getElementById('info-votos');
-        if(info) info.innerText = n < 5 ? `TURNO ACTUAL: PARTICIPANTE ${n+1}` : "VOTACIÓN 
-
-FINALIZADA";
+        if(info) info.innerText = n < 5 ? `TURNO ACTUAL: PARTICIPANTE ${n+1}` : "VOTACIÓN FINALIZADA";
         IDS.forEach(id => {
             const el = document.getElementById('live-'+id);
             if(el) el.innerText = (nube[id] || 0) + " Pts";
@@ -229,9 +169,7 @@ FINALIZADA";
 
     function getV() { return parseInt(localStorage.getItem('votos_final_v5') || "0"); }
     function abrirLogin() { document.getElementById('modal-login').style.display = 'block'; }
-    function cerrarModales() { document.querySelectorAll('.modal').forEach(m => m.style.display 
-
-= 'none'); }
+    function cerrarModales() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     
     function entrarAdmin() {
         if (document.getElementById('pass-admin').value === '55555') {
@@ -262,13 +200,9 @@ FINALIZADA";
         if (max <= 0) {
             divG.innerHTML = "ESPERANDO VOTOS";
         } else if (ganadores.length > 1) {
-            divG.innerHTML = `🤝 EMPATE ENTRE:<br><span style="color:var(--vino); font-
-
-size:1.2rem;">${ganadores.join(" & ")}</span>`;
+            divG.innerHTML = `🤝 EMPATE ENTRE:<br><span style="color:var(--vino); font-size:1.2rem;">${ganadores.join(" & ")}</span>`;
         } else {
-            divG.innerHTML = `🏆 GANADOR:<br><span style="color:var(--vino); font-
-
-size:1.2rem;">${ganadores[0]}</span>`;
+            divG.innerHTML = `🏆 GANADOR:<br><span style="color:var(--vino); font-size:1.2rem;">${ganadores[0]}</span>`;
         }
         
         document.getElementById('modal-acta').style.display = 'block';
@@ -288,4 +222,3 @@ size:1.2rem;">${ganadores[0]}</span>`;
 </script>
 </body>
 </html>
-
